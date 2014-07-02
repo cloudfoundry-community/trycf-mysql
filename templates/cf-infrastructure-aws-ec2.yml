@@ -1,0 +1,23 @@
+meta:
+  stemcell:
+    name: bosh-aws-xen-centos-go_agent
+    version: latest
+
+compilation:
+  cloud_properties:
+    instance_type: c1.medium
+
+networks:
+  - name: services1
+    type: dynamic
+    cloud_properties:
+      security_groups:
+        - cf
+
+resource_pools:
+  - name: services-small
+    stemcell:
+      name: (( meta.stemcell.name ))
+      version: (( meta.stemcell.version ))
+    cloud_properties:
+      instance_type: m1.small

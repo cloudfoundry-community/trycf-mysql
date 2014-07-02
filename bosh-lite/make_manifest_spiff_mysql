@@ -1,0 +1,29 @@
+#!/bin/bash
+
+CUR_DIR=$(pwd)
+BOSH_RELEASES_DIR=${BOSH_RELEASES_DIR:-~/workspace}
+MYSQL_RELEASE_DIR=${MYSQL_RELEASE_DIR:-$CUR_DIR}
+
+if [[ ! -d $MYSQL_RELEASE_DIR ]]; then
+  echo "Cannot find cf-mysql-release at $MYSQL_RELEASE_DIR; override with \$MYSQL_RELEASE_DIR variable"
+  exit 1
+fi
+
+if [[ "$(which cf)X" == "X" ]]; then
+  echo "Cannot find cf command line. Download from https://github.com/cloudfoundry/cli/releases"
+  exit 1
+fi
+
+cd $MYSQL_RELEASE_DIR
+mkdir -p bosh-lite/tmp
+mkdir -p bosh-lite/manifests
+cp bosh-lite/cf-mysql-stub-spiff.yml bosh-lite/tmp/cf-mysql-stub-with-uuid.yml
+DIRECTOR_UUID=$(bosh status | grep UUID | awk '{print $2}')
+echo bosh director UUID $DIRECTOR_UUID
+CF_DOMAIN=$(cf api | awk '{print $3}' | sed -e 's/https.*api\.//g')
+echo cf domain $CF_DOMAIN
+perl -pi -e "s/PLACEHOLDER-DIRECTOR-UUID/$DIRECTOR_UUID/g" bosh-lite/tmp/cf-mysql-stub-with-uuid.yml
+perl -pi -e "s/CF_DOMAIN/$CF_DOMAIN/g" bosh-lite/tmp/cf-mysql-stub-with-uuid.yml
+
+$MYSQL_RELEASE_DIR/generate_deployment_manifest warden bosh-lite/tmp/cf-mysql-stub-with-uuid.yml > $CUR_DIR/bosh-lite/manifests/cf-mysql-manifest.yml
+bosh deployment bosh-lite/manifests/cf-mysql-manifest.yml
