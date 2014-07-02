@@ -19,6 +19,8 @@ Target the internal BOSH within your TryCF VM.
 bosh target <TRYCF_IP>
 ```
 
+Username & password are `admin`.
+
 Run the following steps from within this project:
 
 ```
