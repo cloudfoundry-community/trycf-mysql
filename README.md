@@ -16,7 +16,7 @@ Steps
 Target the internal BOSH within your TryCF VM.
 
 ```
-bosh target <TRYCF_IP>
+bosh target <TRYCF_IP> trycf
 ```
 
 Username & password are `admin`.
