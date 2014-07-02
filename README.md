@@ -13,6 +13,12 @@ Requirements
 Steps
 -----
 
+Target the internal BOSH within your TryCF VM.
+
+```
+bosh target <TRYCF_IP>
+```
+
 Run the following steps from within this project:
 
 ```
