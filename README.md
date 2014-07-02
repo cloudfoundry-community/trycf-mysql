@@ -69,3 +69,16 @@ Now you can ssh:
 ```
 $ ssh ubuntu@107.20.174.183 -i ~/.ssh/trycf.pem
 ```
+
+Upgrade to new cf-mysql-release final releases
+----------------------------------------------
+
+For future maintainers of this project, when cf-mysql-release cuts future versions:
+
+- create a tarball of the final release (within `cf-mysql-release` project: `bosh create release --with-tarball releases/cf-mysql-9.yml`)
+- upload tarball to public blobstore (within `community-bosh-releases` project: `bosh share release ../cf-mysql-release/releases/cf-mysql-9.tgz`)
+- document release tarball in `community-bosh-releases` project README
+- update this project's README
+- copy over cf-mysql templates (within `cf-mysql-release` project: `git checkout v9; cp -R templates ../trycf-mysql/`)
+
+Now test the instructions above.
